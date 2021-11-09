@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  * </p>
  *
  * @author GYK
- * @since 2021-10-14
+ * @since 2021-11-09
  */
 @Service
 public class YdMsgLogServiceImpl extends ServiceImpl<YdMsgLogMapper, YdMsgLog> implements IYdMsgLogService {

@@ -9,8 +9,6 @@ import lombok.Data;
  */
 @Data
 public class FaultClassificationData {
-    @ExcelProperty("城市行政编码")
-    private String cityCode;
     @ExcelProperty("线路")
     private String line;
     @ExcelProperty("故障描述")

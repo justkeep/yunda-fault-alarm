@@ -2,7 +2,6 @@ package com.yunda.faultalarm.dal.model;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
 import java.io.Serializable;
 
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -11,16 +10,16 @@ import lombok.EqualsAndHashCode;
 
 /**
  * <p>
- * 故障分类信息表
+ * 故障等级配置表
  * </p>
  *
  * @author GYK
- * @since 2021-10-14
+ * @since 2021-11-09
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@TableName("yd_fault_classification")
-public class YdFaultClassification implements Serializable {
+@TableName("yd_fault_grade_config")
+public class YdFaultGradeConfig implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -31,31 +30,24 @@ public class YdFaultClassification implements Serializable {
     private Integer id;
 
     /**
-     * 城市编码
+     * 属性编码
      */
-    private String cityCode;
+    private String codeValue;
 
     /**
-     * 线路名称
+     * 属性描述
      */
-    private String line;
+    private String description;
 
     /**
-     * 分类名称
+     * 展示名称
      */
-    private String categoryName;
+    private String showName;
 
     /**
-     * 故障描述
+     * 类别:	            等级：grade，部件：component
      */
-    private String faultDescription;
-
-    /**
-     * 创建时间
-     */
-    private LocalDateTime createAt;
-
-    private LocalDateTime updatedAt;
+    private String category;
 
 
 }

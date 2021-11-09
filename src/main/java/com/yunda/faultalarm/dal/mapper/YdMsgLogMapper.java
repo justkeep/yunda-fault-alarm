@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * </p>
  *
  * @author GYK
- * @since 2021-10-14
+ * @since 2021-11-09
  */
 public interface YdMsgLogMapper extends BaseMapper<YdMsgLog> {
 

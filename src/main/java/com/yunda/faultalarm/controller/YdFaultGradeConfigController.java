@@ -7,14 +7,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
- *  前端控制器
+ * 故障等级配置表 前端控制器
  * </p>
  *
  * @author GYK
  * @since 2021-11-09
  */
 @RestController
-@RequestMapping("/yd-category-phone-config")
-public class YdCategoryPhoneConfigController {
+@RequestMapping("/yd-fault-grade-config")
+public class YdFaultGradeConfigController {
 
 }

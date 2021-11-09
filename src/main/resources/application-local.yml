@@ -20,3 +20,15 @@ spring:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+wangyiyun:
+  #通知类短信，请求的URL
+  service-url: https://api.netease.im/sms/sendtemplate.action
+  #网易云信分配的账号，请替换你在管理后台应用下申请的Appkey
+  appkey:
+  #短信模板ID
+  templateid:
+  #网易云信分配的密钥，请替换你在管理后台应用下申请的appSecret
+  app-secret:
+  #随机数
+  nonce: 0123456789

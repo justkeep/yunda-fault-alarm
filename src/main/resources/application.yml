@@ -9,6 +9,12 @@ spring:
         default-property-inclusion: non_null
     http:
         multipart:
-            max-file-size: 100MB
-            max-request-size: 100MB
+            max-file-size: 10MB
+            max-request-size: 10MB
             enabled: true
+    thymeleaf:
+        mode: HTML5
+        encoding: UTF-8
+        servlet:
+            content-type: text/html
+        cache: false

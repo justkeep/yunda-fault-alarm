@@ -10,9 +10,6 @@ import lombok.Data;
  */
 @Data
 public class CategoryPhoneConfigData {
-    @ExcelProperty("城市行政编码")
-    private String cityCode;
-
     @ExcelProperty("线路")
     private String line;
 

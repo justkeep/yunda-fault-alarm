@@ -63,8 +63,8 @@ public class CodeGenerator {
         pc.setParent("com.yunda.faultalarm")
                 .setMapper("dal.mapper")
                 .setEntity("dal.model")
-                .setService("service")
-                .setServiceImpl("service.impl")
+                .setService("biz.service")
+                .setServiceImpl("biz.service.impl")
                 .setController("controller")
                 .setXml("mapper");
         mpg.setPackageInfo(pc);

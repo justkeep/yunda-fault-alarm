@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>故障电话配置</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.6.0/css/bootstrap.min.css}">
+</head>
+<script th:src="@{/webjars/jquery/3.4.1/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/4.6.0/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/phoneConfig.js}"></script>
+<body>
+<div align="center">
+    <form action="#" th:action="@{/listPhoneConfig}" method="post">
+        <label for="line">线路名称：</label>
+        <input id="line" name="line" th:value="${line}">
+<!--        <label for="category">分类名称：</label>-->
+<!--        <input id="category" name="category" th:value="${category}">-->
+        <button id="search-btn" name="search-btn">搜索</button>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <a th:href="@{/addFault}">新增电话配置</a>
+    </form>
+<!--    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
+
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<!--    <a th:href="@{/listPhoneConfig}">刷新全部数据</a>-->
+    <table class="table table-bordered">
+        <thead class="thead-dark">
+            <tr align="center">
+                <th scope="col" width="10%">所属线路</th>
+                <th scope="col" width="15%">电话</th>
+                <th scope="col" width="8%">是否发送短信</th>
+                <th scope="col" width="5%">短信发送频率(N次/天)</th>
+                <th scope="col" width="12%">短信发送间隔时间(N小时/次)</th>
+                <th scope="col" width="5%">等级</th>
+                <th scope="col" width="5%">部件</th>
+                <th scope="col" colspan="2" width="10%">操作</th>
+            </tr>
+        </thead>
+
+        <tr align="center" th:each="list: ${pages.list}">
+<!--            <td><a th:href="@{/getUser(id=${list.id})}">[[${list.line}]]</a></td>-->
+            <td th:text="${list.line}"></td>
+            <td th:text="${list.phones}"></td>
+            <td th:text="${list.pushMsgFlag}=='发送'?'是':'否'"></td>
+            <td th:text="${list.pushFrequency}"></td>
+            <td th:text="${list.pushFrequency}"></td>
+            <td th:text="温度预警"></td>
+            <td th:text="齿轮箱"></td>
+            <td><a th:href="@{/findPhoneConfig(id=${list.id})}">编辑</a></td>
+            <td><a th:href="@{/deletePhoneConfig(id=${list.id})}">删除</a></td>
+        </tr>
+    </table>
+</div>
+<div align="center">
+    <a th:unless="${pages.isFirstPage}"
+       th:href="@{/listPhoneConfig(line=${line},category=${category})}">首 页</a>
+    <a th:unless="${pages.isFirstPage}"
+       th:href="@{/listPhoneConfig(start=${pages.hasPreviousPage}?${pages.prePage}:1, line=${line},category=${category})}">上一页</a>
+    <a th:unless="${pages.isLastPage}"
+       th:href="@{/listPhoneConfig(start=${pages.hasNextPage}?${pages.nextPage}:${pages.pages}, line=${line},category=${category})}">下一页</a>
+    <a th:unless="${pages.isLastPage}"
+       th:href="@{/listPhoneConfig(start=${pages.pages}, line=${line},category=${category})}">末 页</a>
+</div>
+
+<script type="text/javascript">
+
+</script>
+</body>
+</html>

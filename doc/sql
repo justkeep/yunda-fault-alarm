@@ -1,0 +1,53 @@
+CREATE TABLE `yd_msg_log` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `line_name` varchar(255) NOT NULL COMMENT '线路名称',
+  `line_code` varchar(255) NOT NULL COMMENT '线路编码',
+  `content` varchar(512) NOT NULL COMMENT '短信内容',
+  `phone` varchar(16) NOT NULL COMMENT '电话',
+  `send_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '短信发送时间',
+  `send_status` varchar(16) NOT NULL COMMENT '发送成功:success,发送失败：fail，不发送：inexecution',
+  `alarm_time` varchar(64) DEFAULT NULL COMMENT '报警时间',
+  `num_train` varchar(32) DEFAULT NULL COMMENT '列车号',
+  `alias_train` varchar(255) DEFAULT NULL COMMENT '列车号别名',
+  `num_vehicle` varchar(32) DEFAULT NULL COMMENT '车辆号',
+  `alias_vehicle` varchar(255) DEFAULT NULL COMMENT '车辆号别名',
+  `category` varchar(16) DEFAULT NULL COMMENT '项目',
+  `sub_category` varchar(16) DEFAULT NULL COMMENT '分类',
+  `alarm_grade` varchar(16) DEFAULT NULL COMMENT '等级',
+  `component` varchar(16) DEFAULT NULL COMMENT '部件',
+  `subpart` varchar(16) DEFAULT NULL COMMENT '子部件',
+  `alias_subpart` varchar(255) DEFAULT NULL COMMENT '子部件别名',
+  `num_bogie` varchar(16) DEFAULT NULL COMMENT '架号',
+  `num_axle` varchar(16) DEFAULT NULL COMMENT '轴号',
+  `num_location` varchar(16) DEFAULT NULL COMMENT '测点号',
+  `alias_location` varchar(255) DEFAULT NULL COMMENT '测点号别名',
+  `code_qz` varchar(16) DEFAULT NULL COMMENT '前置处理器号',
+  `ext_info` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='短信发送日志记录表';
+
+CREATE TABLE `yd_fault_grade_config` (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `code_value` varchar(128) NOT NULL COMMENT '属性编码',
+  `description` varchar(255) NOT NULL COMMENT '属性描述',
+  `show_name` varchar(255) NOT NULL COMMENT '展示名称',
+  `category` varchar(32) NOT NULL COMMENT '类别:\r\n            等级：grade，部件：component',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='故障等级配置表';
+
+CREATE TABLE `yd_category_phone_config` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `line_name` varchar(255) NOT NULL COMMENT '线路',
+  `line_code` varchar(64) NOT NULL COMMENT '线路编码',
+  `phones` text COMMENT '电话号码',
+  `push_msg_flag` tinyint NOT NULL COMMENT '是否发送短信标志:1：发送 0 ：不发送',
+  `frequency` int DEFAULT NULL COMMENT '同一条短信往同一个手机号一天内发送的次数',
+  `cut_off` int DEFAULT NULL COMMENT '每次发送时间间隔，单位小时',
+  `grade` text NOT NULL,
+  `component` varchar(255) DEFAULT NULL,
+  `create_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `del_flag` tinyint DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+

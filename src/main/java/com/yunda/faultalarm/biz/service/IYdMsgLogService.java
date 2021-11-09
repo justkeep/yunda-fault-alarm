@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * </p>
  *
  * @author GYK
- * @since 2021-10-14
+ * @since 2021-11-09
  */
 public interface IYdMsgLogService extends IService<YdMsgLog> {
 

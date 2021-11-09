@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>编辑</title>
+</head>
+<script th:src="@{/webjars/jquery/3.4.1/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/modifyPhoneConfig.js}"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#example-getting-started').multiselect();
+    });
+</script>
+<body>
+
+<style id="#{phones}">
+    p input{
+        width: 1000px;
+        height: 100px;
+    }
+</style>
+<div style="margin:0px auto; width:1400px">
+    <form action="updatePhoneConfig" method="post">
+        <input name="id" type="hidden" th:value="${categoryPhoneConfig.id}"/>
+        <table>
+            <tr>
+                <td>
+                    <label for="line">线路编码: </label>
+                </td>
+                <td>
+                    <input id="line" name="line" th:value="${categoryPhoneConfig.line}"/><br/>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label for="category">等级: </label>
+                </td>
+                <td>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox23" value="option1">
+                        <label class="form-check-label" for="inlineCheckbox23">前置处理器故障</label>
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox22" value="option2">
+                        <label class="form-check-label" for="inlineCheckbox22">复合传感器故障</label>
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox10" value="option1">
+                        <label class="form-check-label" for="inlineCheckbox10">温度:预警</label>
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox11" value="option2">
+                        <label class="form-check-label" for="inlineCheckbox11">温度:报警</label>
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox24" value="option1">
+                        <label class="form-check-label" for="inlineCheckbox24">振动:预警</label>
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox25" value="option2">
+                        <label class="form-check-label" for="inlineCheckbox25">振动:I级报警</label>
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox26" value="option2">
+                        <label class="form-check-label" for="inlineCheckbox26">振动:II级报警</label>
+                        <input class="form-check-input" type="checkbox"  value="option1">
+                        <label class="form-check-label" for="inlineCheckbox10">失稳:预警</label>
+                        <input class="form-check-input" type="checkbox"  value="option2">
+                        <label class="form-check-label" for="inlineCheckbox11">失稳:报警</label>
+                        <input class="form-check-input" type="checkbox"  value="option2">
+                        <label class="form-check-label" for="inlineCheckbox11">脱轨</label>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="category">部件: </label>
+                </td>
+                <td>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox7" value="option1">
+                        <label class="form-check-label" for="inlineCheckbox7">齿轮箱</label>
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox4" value="option2">
+                        <label class="form-check-label" for="inlineCheckbox4">电机</label>
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox5" value="option3">
+                        <label class="form-check-label" for="inlineCheckbox5">轴箱</label>
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox6" value="option3">
+                        <label class="form-check-label" for="inlineCheckbox6">车轮</label>
+                    </div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td>
+                    <label for="pushMsgFlag">是否发送短信: </label>
+                </td>
+                <td>
+                        <div id="pushMsgFlag" class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="inlineCheckbox16" value="option1">
+                            <label class="form-check-label" for="inlineCheckbox16">发送</label>
+                            <input class="form-check-input" type="checkbox" id="inlineCheckbox17" value="option2">
+                            <label class="form-check-label" for="inlineCheckbox17">不发送</label>
+                        </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="pushFrequency">短信发送频率(N次/天): </label>
+                </td>
+                <td>
+                    <input id="pushFrequency" name="pushFrequency" th:value="${categoryPhoneConfig.pushFrequency}"/><br/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="timeInterval">短信发送间隔时间(N小时/次): </label>
+                </td>
+                <td>
+                    <input id="timeInterval" name="timeInterval" th:value="${categoryPhoneConfig.pushFrequency}"/><br/>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label for="phones">电话1: </label>
+                </td>
+                <td>
+                    <input id="phones" name="phones" th:value="${categoryPhoneConfig.phones}"/><br/>
+                </td>
+
+            </tr>
+            <tr>
+                <td>
+                    <label for="phones">电话2: </label>
+                </td>
+                <td>
+                    <input id="phones1" name="phones" th:value="${categoryPhoneConfig.phones}"/><br/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="phones">电话3: </label>
+                </td>
+                <td>
+                    <input id="phones3" name="phones" th:value="${categoryPhoneConfig.phones}"/><br/>
+                </td>
+            </tr>
+            <tr >
+                <td colspan="2">
+                    <button type="button" id="sb1">添加电话</button>
+                </td>
+            </tr>
+
+<!--            <tr>-->
+<!--                <td>-->
+<!--                    <label for="category">子部件: </label>-->
+<!--                </td>-->
+<!--                <td>-->
+<!--                    <div class="form-check form-check-inline">-->
+<!--                        <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">-->
+<!--                        <label class="form-check-label" for="inlineCheckbox1">齿轮</label>-->
+<!--                        <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">-->
+<!--                        <label class="form-check-label" for="inlineCheckbox2">轴承</label>-->
+<!--                        <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">-->
+<!--                        <label class="form-check-label" for="inlineCheckbox3">踏面</label>-->
+<!--                    </div>-->
+<!--                </td>-->
+<!--            </tr>-->
+
+            <tr align="center">
+                <td colspan="2">
+                    <button type="button" id="sb">提交</button>
+                    <button type="button" id="back">返回</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+</body>
+</html>

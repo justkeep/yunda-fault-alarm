@@ -8,11 +8,11 @@ import org.springframework.stereotype.Service;
 
 /**
  * <p>
- * 故障分类电话配置表 服务实现类
+ *  服务实现类
  * </p>
  *
  * @author GYK
- * @since 2021-10-14
+ * @since 2021-11-09
  */
 @Service
 public class YdCategoryPhoneConfigServiceImpl extends ServiceImpl<YdCategoryPhoneConfigMapper, YdCategoryPhoneConfig> implements IYdCategoryPhoneConfigService {

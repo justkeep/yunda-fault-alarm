@@ -11,8 +11,8 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class YunDaFaultMessageDTO {
 
-    @NotBlank(message = "cityCode不能为空")
-    private String cityCode;
+    @NotBlank(message = "time不能为空")
+    private String time;
 
     @NotBlank(message = "line不能为空")
     private String line;

@@ -3,7 +3,6 @@ package com.yunda.faultalarm.dal.model;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
-import java.sql.Blob;
 import java.io.Serializable;
 
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -12,11 +11,11 @@ import lombok.EqualsAndHashCode;
 
 /**
  * <p>
- * 故障分类电话配置表
+ * 
  * </p>
  *
  * @author GYK
- * @since 2021-10-14
+ * @since 2021-11-09
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -29,19 +28,14 @@ public class YdCategoryPhoneConfig implements Serializable {
     private Integer id;
 
     /**
-     * 城市编码
-     */
-    private String cityCode;
-
-    /**
      * 线路
      */
-    private String line;
+    private String lineName;
 
     /**
-     * 分类
+     * 线路编码
      */
-    private String category;
+    private String lineCode;
 
     /**
      * 电话号码
@@ -49,9 +43,23 @@ public class YdCategoryPhoneConfig implements Serializable {
     private String phones;
 
     /**
-     * 是否发送短信：发送 , 不发送
+     * 是否发送短信标志:1：发送 0 ：不发送
      */
-    private String pushMsgFlag;
+    private Integer pushMsgFlag;
+
+    /**
+     * 同一条短信往同一个手机号一天内发送的次数
+     */
+    private Integer frequency;
+
+    /**
+     * 每次发送时间间隔，单位小时
+     */
+    private Integer cutOff;
+
+    private String grade;
+
+    private String component;
 
     /**
      * 创建时间
@@ -62,6 +70,8 @@ public class YdCategoryPhoneConfig implements Serializable {
      * 更新时间
      */
     private LocalDateTime updatedAt;
+
+    private Integer delFlag;
 
 
 }
