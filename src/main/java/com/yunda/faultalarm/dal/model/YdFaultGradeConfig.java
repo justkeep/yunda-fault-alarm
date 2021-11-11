@@ -49,5 +49,10 @@ public class YdFaultGradeConfig implements Serializable {
      */
     private String category;
 
+    /**
+     * 组号
+     */
+    private String groupNumber;
+
 
 }
