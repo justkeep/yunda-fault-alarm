@@ -1,6 +1,7 @@
 package com.yunda.faultalarm.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yunda.faultalarm.biz.dto.BaseResponse;
@@ -10,13 +11,10 @@ import com.yunda.faultalarm.biz.service.IYdCategoryPhoneConfigService;
 import com.yunda.faultalarm.biz.service.IYdMsgLogService;
 import com.yunda.faultalarm.dal.model.YdCategoryPhoneConfig;
 import com.yunda.faultalarm.dal.model.YdMsgLog;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -33,6 +31,8 @@ import java.util.stream.Collectors;
  * @since 2021-11-09
  */
 @RestController
+@RequestMapping("/api")
+@CrossOrigin(origins = "*")
 public class YdMsgLogController {
 
     @Autowired
@@ -43,14 +43,22 @@ public class YdMsgLogController {
     @GetMapping("/msg_log_page")
     public BaseResponse deleteConfig(QueryMsgParams queryMsgParams){
         QueryWrapper<YdMsgLog> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda()
-                .in(YdMsgLog::getSendStatus, Arrays.asList("success","fail"))
-                .like(YdMsgLog::getLineName,queryMsgParams.getLineName())
-                .like(YdMsgLog::getPhone,queryMsgParams.getPhone())
-                .ge(YdMsgLog::getSendTime,queryMsgParams.getStartTime())
-                .le(YdMsgLog::getSendTime,queryMsgParams.getEndTime());
+        LambdaQueryWrapper<YdMsgLog> lambdaQueryWrapper = queryWrapper.lambda()
+                .in(YdMsgLog::getSendStatus, Arrays.asList("success", "fail"));
+          if (StringUtils.isNotBlank(queryMsgParams.getLineName())){
+              lambdaQueryWrapper.like(YdMsgLog::getLineName,queryMsgParams.getLineName());
+          }
+          if (StringUtils.isNotBlank(queryMsgParams.getPhone())){
+              lambdaQueryWrapper.like(YdMsgLog::getPhone,queryMsgParams.getPhone());
+          }
+          if (StringUtils.isNotBlank(queryMsgParams.getStartTime())){
+              lambdaQueryWrapper.ge(YdMsgLog::getSendTime,queryMsgParams.getStartTime());
+          }
+          if (StringUtils.isNotBlank(queryMsgParams.getEndTime())){
+              lambdaQueryWrapper.le(YdMsgLog::getSendTime,queryMsgParams.getEndTime());
+          }
         Page<YdMsgLog> page = new Page<>(queryMsgParams.getPageNum(),queryMsgParams.getPageSize());
-        msgLogService.page(page,queryWrapper);
+        msgLogService.page(page,lambdaQueryWrapper);
         MsgLogDTO msgLogDTO = new MsgLogDTO();
         msgLogDTO.setTotalCount(page.getTotal());
         msgLogDTO.setPageNum(page.getCurrent());
