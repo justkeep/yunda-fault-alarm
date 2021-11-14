@@ -62,12 +62,12 @@ public class CategoryMsgConfigResultDTO implements Serializable {
         /**
          * 故障等级
          */
-        private List<String> grade;
+        private List<GradeAndComponentResultDTO.Detail> grade;
 
         /**
          * 部件
          */
-        private List<String> component;
+        private List<GradeAndComponentResultDTO.Detail> component;
     }
 
 }

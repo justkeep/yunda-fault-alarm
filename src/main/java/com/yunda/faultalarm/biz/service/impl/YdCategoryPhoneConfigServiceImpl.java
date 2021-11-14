@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yunda.faultalarm.biz.dto.CategoryMsgConfigResultDTO;
+import com.yunda.faultalarm.biz.dto.GradeAndComponentResultDTO;
 import com.yunda.faultalarm.biz.dto.QueryConfigParams;
 import com.yunda.faultalarm.biz.dto.SaveCategoryPhoneConfigDTO;
 import com.yunda.faultalarm.biz.service.IYdFaultGradeConfigService;
@@ -99,15 +100,20 @@ public class YdCategoryPhoneConfigServiceImpl extends ServiceImpl<YdCategoryPhon
         return true;
     }
 
-    private List<String> getGradeOrComponents(String grades, List<YdFaultGradeConfig> gradeConfigList) {
+    private List<GradeAndComponentResultDTO.Detail> getGradeOrComponents(String grades, List<YdFaultGradeConfig> gradeConfigList) {
         List<String> gradeCodeList = Arrays.asList(grades.split(","));
+        List<GradeAndComponentResultDTO.Detail> list = new ArrayList<>();
         if (!CollectionUtils.isEmpty(gradeCodeList)) {
-            Map<String, String> gradeMap = gradeConfigList.stream().collect(Collectors.toMap(YdFaultGradeConfig::getCodeValue, YdFaultGradeConfig::getShowName));
-            return gradeCodeList.stream().map(grade -> {
-                String gradeName = gradeMap.get(grade);
-                return gradeName;
-            }).collect(Collectors.toList());
+            gradeConfigList.stream().forEach(ydFaultGradeConfig -> {
+                if (gradeCodeList.contains(ydFaultGradeConfig.getCodeValue())){
+                    GradeAndComponentResultDTO.Detail detail  = new GradeAndComponentResultDTO.Detail();
+                    detail.setCodeValue(ydFaultGradeConfig.getCodeValue());
+                    detail.setShowName(ydFaultGradeConfig.getShowName());
+                    detail.setGroupNumber(ydFaultGradeConfig.getGroupNumber());
+                    list.add(detail);
+                }
+            });
         }
-        return Collections.EMPTY_LIST;
+        return list;
     }
 }
