@@ -4,16 +4,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
 
 /**
  * 故障信息
  * @author gyk
  */
 @Data
-public class YunDaFaultMessageDTO {
+public class YunDaFaultMessageDTO implements Serializable {
 
     @NotBlank(message = "报警时间不能为空")
-    @JsonProperty("Alarm_Time")
+    @JsonProperty(value = "Alarm_Time")
     private String alarmTime;
 
     @JsonProperty("Num_line")
@@ -37,23 +38,23 @@ public class YunDaFaultMessageDTO {
     private String aliasVehicle;
 
     @JsonProperty("Category")
-    @NotBlank(message = "项目不能为空")
+    @NotBlank(message = "项目信息不能为空")
     private String category;
 
     @JsonProperty("Sub_Category")
-    @NotBlank(message = "分类不能为空")
+    @NotBlank(message = "分类信息不能为空")
     private String subCategory;
 
     @JsonProperty("Alarm_Grade")
-    @NotBlank(message = "等级不能为空")
+    @NotBlank(message = "等级信息不能为空")
     private String alarmGrade;
 
     @JsonProperty("Component")
-    @NotBlank(message = "部件不能为空")
+    @NotBlank(message = "部件信息不能为空")
     private String component;
 
     @JsonProperty("Subpart")
-    @NotBlank(message = "子部件不能为空")
+    @NotBlank(message = "子部件信息不能为空")
     private String subpart;
 
     @JsonProperty("Alias_Subpart")

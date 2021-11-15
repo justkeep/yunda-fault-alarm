@@ -13,6 +13,7 @@ import com.yunda.faultalarm.dal.model.YdCategoryPhoneConfig;
 import com.yunda.faultalarm.dal.model.YdMsgLog;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
 
 /**
  * <p>
- * 短信发送日志记录表 前端控制器
+ * 短信发送日志记录相关接口
  * </p>
  *
  * @author GYK
@@ -39,6 +40,9 @@ public class YdMsgLogController {
     private IYdMsgLogService msgLogService;
     @Autowired
     private IYdCategoryPhoneConfigService categoryPhoneConfigService;
+
+    @Autowired
+    private ApplicationContext context;
 
     @GetMapping("/msg_log_page")
     public BaseResponse deleteConfig(QueryMsgParams queryMsgParams){

@@ -42,20 +42,21 @@ public class MessageUtil {
     @Value("${wangyiyun.nonce}")
     private String nonce;
 
-    public void sendMessage(List<String> mobiles,String line,String fault) {
+    public boolean sendMessage(List<String> mobiles,String content) {
         //手机号，接收者号码列表，JSONArray格式，限制接收者号码个数最多为100个
 //        final String MOBILES = "['13888888888','13666666666']";
         int maxMobileSize = 100;
         List<List<String>> partitions = Lists.partition(mobiles, maxMobileSize);
         partitions.forEach(partition->{
-            sendMessageByWangYi(line, fault, partition);
+            sendMessageByWangYi(content, partition);
         });
+        return true;
     }
 
-    private void sendMessageByWangYi(String line, String fault, List<String> mobileList) {
+    private void sendMessageByWangYi(String content, List<String> mobileList) {
         String mobiles = JSON.parseArray(JSON.toJSONString(mobileList)).toJSONString();
         //todo 短信参数列表，用于依次填充模板，JSONArray格式，每个变量长度不能超过30字,对于不包含变量的模板，不填此参数表示模板即短信全文内容
-        List<String> paramList = Arrays.asList(line,fault);
+        List<String> paramList = Arrays.asList(content);
 //        final String PARAMS = "['xxxx','xxxx']";
         String params = JSON.parseArray(JSON.toJSONString(paramList)).toJSONString();
         CloseableHttpClient httpClient = HttpClients.createDefault();
