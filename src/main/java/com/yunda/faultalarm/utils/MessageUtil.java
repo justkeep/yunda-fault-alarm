@@ -43,13 +43,13 @@ public class MessageUtil {
     private String nonce;
 
     public boolean sendMessage(List<String> mobiles,String content) {
-        //手机号，接收者号码列表，JSONArray格式，限制接收者号码个数最多为100个
+        //todo 手机号，接收者号码列表，JSONArray格式，限制接收者号码个数最多为100个
 //        final String MOBILES = "['13888888888','13666666666']";
-        int maxMobileSize = 100;
-        List<List<String>> partitions = Lists.partition(mobiles, maxMobileSize);
-        partitions.forEach(partition->{
-            sendMessageByWangYi(content, partition);
-        });
+//        int maxMobileSize = 100;
+//        List<List<String>> partitions = Lists.partition(mobiles, maxMobileSize);
+//        partitions.forEach(partition->{
+//            sendMessageByWangYi(content, partition);
+//        });
         return true;
     }
 

@@ -63,6 +63,7 @@ public class YdFaultReceiveController {
         String grade = yunDaFaultMessageDTO.getCategory() + yunDaFaultMessageDTO.getSubCategory() + yunDaFaultMessageDTO.getAlarmGrade();
         QueryWrapper<YdCategoryPhoneConfig> categoryPhoneConfigQueryWrapper = new QueryWrapper<>();
         LambdaQueryWrapper<YdCategoryPhoneConfig> lambdaQueryWrapper = categoryPhoneConfigQueryWrapper.lambda()
+                .eq(YdCategoryPhoneConfig::getPushMsgFlag,1)
                 .eq(YdCategoryPhoneConfig::getLineCode, yunDaFaultMessageDTO.getLineCode())
                 .like(YdCategoryPhoneConfig::getGrade, grade);
         if (StringUtils.isNotBlank(yunDaFaultMessageDTO.getComponent())) {
@@ -112,7 +113,6 @@ public class YdFaultReceiveController {
                 message = String.format(DERAILMENT_TEMPLATE, yunDaFaultMessageDTO.getAliasTrain(), yunDaFaultMessageDTO.getAliasVehicle(), yunDaFaultMessageDTO.getNumLocation());
             }
         }
-
         if (StringUtils.isNotBlank(message)) {
             QueryWrapper<YdMsgLog> msgLogQueryWrapper = new QueryWrapper<>();
             msgLogQueryWrapper.lambda()
@@ -123,14 +123,14 @@ public class YdFaultReceiveController {
                     .orderByDesc(YdMsgLog::getSendTime);
             List<YdMsgLog> list = msgLogService.list(msgLogQueryWrapper);
             List<String> phones = Arrays.asList(categoryPhoneConfig.getPhones().split(","));
-            boolean messageStatus = true;
+            Boolean messageStatus = null;
             if (CollectionUtils.isEmpty(list)) {
                 //todo 发送短信
                 messageStatus = messageUtil.sendMessage(phones, message);
             } else {
                 //判断是否满足短信发送频率
-                boolean cutOffFlag = LocalDateTime.now().plusHours(categoryPhoneConfig.getCutOff()).isAfter(list.get(0).getSendTime())
-                        || LocalDateTime.now().plusHours(categoryPhoneConfig.getCutOff()).isEqual(list.get(0).getSendTime());
+                boolean cutOffFlag = list.get(0).getSendTime().plusHours(categoryPhoneConfig.getCutOff()).isBefore(LocalDateTime.now())
+                        || list.get(0).getSendTime().plusHours(categoryPhoneConfig.getCutOff()).isEqual(LocalDateTime.now());
                 if (cutOffFlag){
                     //判断是否超过短信发送次数
                     Map<String, List<YdMsgLog>> groupByPhone = list.stream().collect(Collectors.groupingBy(YdMsgLog::getPhone));
@@ -147,10 +147,11 @@ public class YdFaultReceiveController {
                     }
                 }
             }
-            //记录日志
-            saveMsgLogRecord(yunDaFaultMessageDTO, categoryPhoneConfig, message, phones, messageStatus ? "success" : "fail");
+            if (Objects.nonNull(messageStatus)){
+                //记录日志
+                saveMsgLogRecord(yunDaFaultMessageDTO, categoryPhoneConfig, message, phones, messageStatus ? "success" : "fail");
+            }
         }
-
         saveMsgLogRecord(yunDaFaultMessageDTO, categoryPhoneConfig, message, null, "inexecution");
         return YundaFaultResponse.buildSuccess(true);
     }
