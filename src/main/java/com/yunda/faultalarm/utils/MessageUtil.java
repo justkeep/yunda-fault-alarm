@@ -53,12 +53,12 @@ public class MessageUtil {
 
     public boolean sendMessage(String content, YunDaFaultMessageDTO yunDaFaultMessageDTO, YdCategoryPhoneConfig categoryPhoneConfig) {
         List<String> mobiles = Arrays.asList(categoryPhoneConfig.getPhones().split(","));
-        //todo 手机号，接收者号码列表，JSONArray格式，限制接收者号码个数最多为100个
-//        final String MOBILES = "['13888888888','13666666666']";
+        //手机号，接收者号码列表，JSONArray格式，限制接收者号码个数最多为100个
         int maxMobileSize = 100;
         List<List<String>> partitions = Lists.partition(mobiles, maxMobileSize);
         partitions.forEach(partition->{
             try {
+                //todo 上线放开注解，现在模拟发送
 //                String result = sendMessageByWangYi(content, partition);
 //                HashMap<String,Object> hashMap = JSON.parseObject(result, HashMap.class);
 //                String messageStatus = "200".equals(hashMap.get("code").toString()) ? "success" : "fail";
@@ -80,9 +80,7 @@ public class MessageUtil {
      */
     private String sendMessageByWangYi(String content, List<String> mobileList) {
         String mobiles = JSON.parseArray(JSON.toJSONString(mobileList)).toJSONString();
-        //todo 短信参数列表，用于依次填充模板，JSONArray格式，每个变量长度不能超过30字,对于不包含变量的模板，不填此参数表示模板即短信全文内容
         List<String> paramList = Arrays.asList(content);
-//        final String PARAMS = "['xxxx','xxxx']";
         String params = JSON.parseArray(JSON.toJSONString(paramList)).toJSONString();
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(serviceUrl);
@@ -111,12 +109,7 @@ public class MessageUtil {
         CloseableHttpResponse response = null;
         try {
             httpPost.setEntity(new UrlEncodedFormEntity(nvps, "utf-8"));
-            // 执行请求
             response = httpClient.execute(httpPost);
-            /*
-             * 1.打印执行结果，打印结果一般会200、315、403、404、413、414、500
-             * 2.具体的code有问题的可以参考官网的Code状态表
-             */
             return EntityUtils.toString(response.getEntity(), "utf-8");
         } catch (Exception e) {
             log.error("远程调用网易云接口出错" + e);

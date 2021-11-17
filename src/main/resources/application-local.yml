@@ -6,9 +6,9 @@ spring:
     static-path-pattern: /**
     throw-exception-if-no-handler-found: true
   datasource:
-    url: jdbc:mysql://8.136.159.209:3306/yunda_fault?characterEncoding=utf8&useUnicode=true&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
+    url: jdbc:mysql://localhost:3306/yunda_fault?characterEncoding=utf8&useUnicode=true&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
     username: root
-    password: root
+    password: gyk1994ABC.
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       maximum-pool-size: 50
@@ -29,10 +29,10 @@ wangyiyun:
   #通知类短信，请求的URL
   service-url: https://api.netease.im/sms/sendtemplate.action
   #网易云信分配的账号，请替换你在管理后台应用下申请的Appkey
-  appkey:
+  appkey: 8a94ab839594292b1f5947a9e0f7c618
   #短信模板ID
-  templateid:
+  templateid: 19506986
   #网易云信分配的密钥，请替换你在管理后台应用下申请的appSecret
-  app-secret:
+  app-secret: ec210d0e70b4
   #随机数
   nonce: 0123456789
