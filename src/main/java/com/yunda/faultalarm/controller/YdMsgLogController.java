@@ -88,7 +88,9 @@ public class YdMsgLogController {
     @GetMapping("/query_line_name")
     public BaseResponse queryLineName(){
         QueryWrapper<YdCategoryPhoneConfig> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().select(YdCategoryPhoneConfig::getLineName).groupBy(YdCategoryPhoneConfig::getLineName);
+        queryWrapper.lambda().select(YdCategoryPhoneConfig::getLineName)
+                .eq(YdCategoryPhoneConfig::getDelFlag,0)
+                .groupBy(YdCategoryPhoneConfig::getLineName);
         List<YdCategoryPhoneConfig> list = categoryPhoneConfigService.list(queryWrapper);
         List<String> lineNameList = list.stream().map(YdCategoryPhoneConfig::getLineName).collect(Collectors.toList());
         return BaseResponse.buildSuccess(lineNameList);
