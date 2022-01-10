@@ -23,7 +23,7 @@ public class YundaFaultResponse implements Serializable {
      * 状态吗非0位错误码
      */
     @JsonProperty("Code")
-    private int code;
+    private String code;
 
     /**
      * 描述信息
@@ -35,13 +35,13 @@ public class YundaFaultResponse implements Serializable {
      * 数据
      */
     @JsonProperty("Data")
-    private Boolean data;
+    private String data;
 
 
 
     public YundaFaultResponse(int code , String msg){
 
-        this.code = code;
+        this.code = String.valueOf(code);
         this.msg = msg;
     }
     public YundaFaultResponse(){
@@ -49,15 +49,15 @@ public class YundaFaultResponse implements Serializable {
     }
 
     public YundaFaultResponse(BaseResultEnum enumInterface){
-        this.code = enumInterface.getCode();
+        this.code = String.valueOf(enumInterface.getCode());
         this.msg = enumInterface.getMsg();
         this.data = null;
     }
 
     public YundaFaultResponse(int code , String msg, Boolean date){
-        this.code = code;
+        this.code = String.valueOf(code);
         this.msg = msg;
-        this.data=date;
+        this.data=date.toString();
     }
 
     /**
@@ -67,9 +67,9 @@ public class YundaFaultResponse implements Serializable {
      */
     public static  YundaFaultResponse buildSuccess(Boolean t){
         YundaFaultResponse result = new YundaFaultResponse();
-        result.setCode(BaseResultEnum.SUCCESS.getCode());
+        result.setCode(BaseResultEnum.SUCCESS.getCode().toString());
         result.setMsg(BaseResultEnum.SUCCESS.getMsg());
-        result.setData(t);
+        result.setData(t.toString());
         return result;
     }
     /**
@@ -88,13 +88,13 @@ public class YundaFaultResponse implements Serializable {
      */
     public static YundaFaultResponse buildFail(Integer code, String msg){
         YundaFaultResponse result = new YundaFaultResponse();
-        result.setCode(code);
+        result.setCode(code.toString());
         result.setMsg(msg);
         return  result;
     }
     public static YundaFaultResponse buildFail(){
         YundaFaultResponse result = new YundaFaultResponse();
-        result.setCode(BaseResultEnum.UNKNOWN_ERROR.getCode());
+        result.setCode(BaseResultEnum.UNKNOWN_ERROR.getCode().toString());
         result.setMsg(BaseResultEnum.UNKNOWN_ERROR.getMsg());
         return  result;
     }

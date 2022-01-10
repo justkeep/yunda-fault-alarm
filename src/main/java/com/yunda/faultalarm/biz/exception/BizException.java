@@ -1,5 +1,6 @@
 package com.yunda.faultalarm.biz.exception;
 
+import com.yunda.faultalarm.enums.ResultCode;
 import lombok.Data;
 
 /**
@@ -20,6 +21,7 @@ public class BizException extends RuntimeException{
     }
 
     public BizException(String message){
+        this.code = ResultCode.PARAMS_ERROR.getValue();
         this.message = message;
     }
 }

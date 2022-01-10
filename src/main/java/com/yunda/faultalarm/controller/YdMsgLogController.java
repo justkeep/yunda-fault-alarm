@@ -45,10 +45,11 @@ public class YdMsgLogController {
     private ApplicationContext context;
 
     @GetMapping("/msg_log_page")
-    public BaseResponse deleteConfig(QueryMsgParams queryMsgParams){
+    public BaseResponse msgLogPage(QueryMsgParams queryMsgParams){
         QueryWrapper<YdMsgLog> queryWrapper = new QueryWrapper<>();
         LambdaQueryWrapper<YdMsgLog> lambdaQueryWrapper = queryWrapper.lambda()
-                .in(YdMsgLog::getSendStatus, Arrays.asList("success", "fail"));
+                .in(YdMsgLog::getSendStatus, Arrays.asList("success", "fail"))
+                .orderByDesc(YdMsgLog::getSendTime);
           if (StringUtils.isNotBlank(queryMsgParams.getLineName())){
               lambdaQueryWrapper.like(YdMsgLog::getLineName,queryMsgParams.getLineName());
           }
@@ -71,12 +72,14 @@ public class YdMsgLogController {
         if (!CollectionUtils.isEmpty(records)){
             msgLogDTO.setData(records.stream().map(record->{
                 MsgLogDTO.MsgDetail msgDetail = new MsgLogDTO.MsgDetail();
+                msgDetail.setId(record.getId());
                 msgDetail.setLineName(record.getLineName());
                 msgDetail.setLineCode(record.getLineCode());
-                msgDetail.setContent(record.getContent());
+                msgDetail.setContent(record.getAlarmTime()+","+record.getContent());
                 msgDetail.setPhone(record.getPhone());
                 msgDetail.setSendTime(record.getSendTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
                 msgDetail.setSendStatus("success".equals(record.getSendStatus())? "成功":"失败");
+                msgDetail.setReason(record.getReason());
                 return msgDetail;
             }).collect(Collectors.toList()));
         }else {

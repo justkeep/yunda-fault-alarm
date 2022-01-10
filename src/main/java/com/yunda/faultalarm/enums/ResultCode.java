@@ -12,7 +12,8 @@ public enum ResultCode {
     CODE_QZ_ERROR(10001),
     ALIAS_LOCATION_ERROR(10002),
     NUM_BOGIE_ERROR(10003),
-    PARAMS_ERROR(10004);
+    PARAMS_ERROR(10004),
+    DATETIME_PARSE_ERROR(10006);
 
     private int value;
 

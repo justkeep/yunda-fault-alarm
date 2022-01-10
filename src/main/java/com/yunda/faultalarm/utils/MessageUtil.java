@@ -5,8 +5,11 @@ import com.google.common.collect.Lists;
 import com.yunda.faultalarm.biz.dto.YunDaFaultMessageDTO;
 import com.yunda.faultalarm.biz.exception.BizException;
 import com.yunda.faultalarm.biz.service.IYdMsgLogService;
+import com.yunda.faultalarm.biz.service.IYdWangyiConfigService;
 import com.yunda.faultalarm.dal.model.YdCategoryPhoneConfig;
 import com.yunda.faultalarm.dal.model.YdMsgLog;
+import com.yunda.faultalarm.dal.model.YdWangyiConfig;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -50,47 +53,91 @@ public class MessageUtil {
 
     @Autowired
     private IYdMsgLogService msgLogService;
+    @Autowired
+    private IYdWangyiConfigService ydWangyiConfigService;
 
-    public boolean sendMessage(String content, YunDaFaultMessageDTO yunDaFaultMessageDTO, YdCategoryPhoneConfig categoryPhoneConfig) {
-        List<String> mobiles = Arrays.asList(categoryPhoneConfig.getPhones().split(","));
-        //手机号，接收者号码列表，JSONArray格式，限制接收者号码个数最多为100个
-        int maxMobileSize = 100;
-        List<List<String>> partitions = Lists.partition(mobiles, maxMobileSize);
-        partitions.forEach(partition->{
+    public boolean sendMessage(String content, YunDaFaultMessageDTO yunDaFaultMessageDTO, YdCategoryPhoneConfig categoryPhoneConfig, String phone) {
+        //获取网易云应用信息
+        List<YdWangyiConfig> wangyiConfigs = ydWangyiConfigService.list();
+        List<String> mobileList = Arrays.asList(phone);
+        boolean sendStatus = false;
+        int i = 0;
+        //遍历配置的所有网易云应用
+        while (!sendStatus && i<wangyiConfigs.size()){
+            String sendResult = "";
             try {
-                //todo 上线放开注解，现在模拟发送
-//                String result = sendMessageByWangYi(content, partition);
-//                HashMap<String,Object> hashMap = JSON.parseObject(result, HashMap.class);
-//                String messageStatus = "200".equals(hashMap.get("code").toString()) ? "success" : "fail";
-                String code = "200";
-                String messageStatus = code.equals("200") ? "success" : "fail";
-                saveMsgLogRecord(yunDaFaultMessageDTO,categoryPhoneConfig.getLineName(),content,partition,messageStatus);
-            }catch (Exception e){
-                saveMsgLogRecord(yunDaFaultMessageDTO,categoryPhoneConfig.getLineName(),content,partition,"fail");
+                String result = sendMessageByWangYi(content, mobileList,wangyiConfigs.get(0));
+                HashMap<String, Object> hashMap = JSON.parseObject(result, HashMap.class);
+                String returnCode = hashMap.get("code").toString();
+                sendStatus = "200".equals(returnCode) ;
+                if (sendStatus){
+                    //成功保存结果
+                    saveMsgLogRecord(yunDaFaultMessageDTO, categoryPhoneConfig.getLineName(), content, mobileList, "success", result, categoryPhoneConfig.getId());
+                }else {
+                    if (i == wangyiConfigs.size() - 1){
+                        //最后一次尝试发送短信也失败了则记录短信发送失败结果
+                        saveMsgLogRecord(yunDaFaultMessageDTO, categoryPhoneConfig.getLineName(), content, mobileList, "fail", result, categoryPhoneConfig.getId());
+                    }
+                }
+            } catch (Exception e) {
+                if (i == (wangyiConfigs.size()-1)){
+                    saveMsgLogRecord(yunDaFaultMessageDTO, categoryPhoneConfig.getLineName(), content, mobileList, "fail", sendResult, categoryPhoneConfig.getId());
+                }
+            }finally {
+                i++;
             }
-        });
+        }
         return true;
     }
 
     /**
      * 发送短信返回状态码
+     *
      * @param content
      * @param mobileList
      * @return
      */
-    private String sendMessageByWangYi(String content, List<String> mobileList) {
+    @SneakyThrows
+    public String sendMessageByWangYi(String content, List<String> mobileList,YdWangyiConfig wangyiConfig) {
         String mobiles = JSON.parseArray(JSON.toJSONString(mobileList)).toJSONString();
-        List<String> paramList = Arrays.asList(content);
+        List<String> paramList = new ArrayList<>();
+        if (content.length() > 20) {
+            paramList.add(content.substring(0, 20));
+            String newContent = content.substring(20);
+            int paramNumber = newContent.length() / 30;
+            int i1 = content.length() % 30;
+            if (i1 != 0) {
+                paramNumber++;
+            }
+            if (paramNumber > 1) {
+                for (int i = 0; i < paramNumber; i++) {
+                    int beginIndex = i * 30;
+                    int endIndex = i * 30 + 30;
+                    if (endIndex >= newContent.length()) {
+                        paramList.add(newContent.substring(beginIndex));
+                    } else {
+                        paramList.add(newContent.substring(beginIndex, endIndex));
+                    }
+                }
+            } else {
+                paramList.add(newContent);
+            }
+        } else {
+            paramList.add(content);
+        }
+        while (paramList.size() < wangyiConfig.getParamNumber()) {
+            paramList.add("");
+        }
         String params = JSON.parseArray(JSON.toJSONString(paramList)).toJSONString();
         CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpPost httpPost = new HttpPost(serviceUrl);
+        HttpPost httpPost = new HttpPost(wangyiConfig.getRequestUrl());
         String curTime = String.valueOf((new Date()).getTime() / 1000L);
         /*
          * 参考计算CheckSum的java代码，在上述文档的参数列表中，有CheckSum的计算文档示例
          */
-        String checkSum = CheckSumBuilder.getCheckSum(appSecret, nonce, curTime);
+        String checkSum = CheckSumBuilder.getCheckSum(wangyiConfig.getAppSecret(), nonce, curTime);
         // 设置请求的header
-        httpPost.addHeader("AppKey", appKey);
+        httpPost.addHeader("AppKey", wangyiConfig.getAppKey());
         httpPost.addHeader("Nonce", nonce);
         httpPost.addHeader("CurTime", curTime);
         httpPost.addHeader("CheckSum", checkSum);
@@ -103,7 +150,7 @@ public class MessageUtil {
          * 2.参数格式是jsonArray的格式，例如 "['13888888888','13666666666']"
          * 3.params是根据你模板里面有几个参数，那里面的参数也是jsonArray格式
          */
-        nvps.add(new BasicNameValuePair("templateid", templateId));
+        nvps.add(new BasicNameValuePair("templateid", wangyiConfig.getTemplateId()));
         nvps.add(new BasicNameValuePair("mobiles", mobiles));
         nvps.add(new BasicNameValuePair("params", params));
         CloseableHttpResponse response = null;
@@ -113,7 +160,7 @@ public class MessageUtil {
             return EntityUtils.toString(response.getEntity(), "utf-8");
         } catch (Exception e) {
             log.error("远程调用网易云接口出错" + e);
-            throw new BizException("远程调用网易云接口出错");
+            throw e;
         } finally {
             if (response != null) {
                 try {
@@ -133,7 +180,7 @@ public class MessageUtil {
     }
 
     //记录日志
-    private void saveMsgLogRecord(YunDaFaultMessageDTO yunDaFaultMessageDTO, String lineName, String message, List<String> phones, String messageStatus) {
+    public void saveMsgLogRecord(YunDaFaultMessageDTO yunDaFaultMessageDTO, String lineName, String message, List<String> phones, String messageStatus, String reason, Integer configId) {
         String finalMessage = message;
         String finalMessageStatus = messageStatus;
         List<YdMsgLog> msgLogs = new ArrayList<>();
@@ -160,6 +207,13 @@ public class MessageUtil {
             ydMsgLog.setNumLocation(yunDaFaultMessageDTO.getNumLocation());
             ydMsgLog.setAliasLocation(yunDaFaultMessageDTO.getAliasLocation());
             ydMsgLog.setCodeQz(yunDaFaultMessageDTO.getCodeQZ());
+            if (messageStatus.equals("fail")) {
+                HashMap<String, Object> hashMap = JSON.parseObject(reason, HashMap.class);
+                String returnCode = hashMap.get("code").toString();
+                ydMsgLog.setReason("调用网易云接口发送短信失败：错误码:" + reason);
+            }
+            ydMsgLog.setExtInfo(reason);
+            ydMsgLog.setConfigId(configId);
             return ydMsgLog;
         }).collect(Collectors.toList()));
         msgLogService.saveBatch(msgLogs);

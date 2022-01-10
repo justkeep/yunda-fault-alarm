@@ -6,9 +6,9 @@ spring:
     static-path-pattern: /**
     throw-exception-if-no-handler-found: true
   datasource:
-    url: jdbc:mysql://8.136.159.209:3306/yunda_fault?characterEncoding=utf8&useUnicode=true&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
+    url: jdbc:mysql://localhost:3306/yunda_fault?characterEncoding=utf8&useUnicode=true&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
     username: root
-    password:
+    password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       maximum-pool-size: 50

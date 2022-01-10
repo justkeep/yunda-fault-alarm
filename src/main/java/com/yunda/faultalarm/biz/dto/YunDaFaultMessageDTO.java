@@ -1,10 +1,15 @@
 package com.yunda.faultalarm.biz.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Past;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * 故障信息

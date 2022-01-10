@@ -139,5 +139,14 @@ public class YdMsgLog implements Serializable {
 
     private String extInfo;
 
+    /**
+     * 原因
+     */
+    private String reason;
+
+    /**
+     * 配置Id
+     */
+    private Integer configId;
 
 }

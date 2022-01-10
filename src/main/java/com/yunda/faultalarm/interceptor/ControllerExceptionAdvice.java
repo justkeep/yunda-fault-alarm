@@ -26,7 +26,8 @@ public class ControllerExceptionAdvice {
             BizException e1 = (BizException) e;
             return new YundaFaultResponse(e1.getCode(), e1.getMessage());
         }else {
-            return new YundaFaultResponse(10005, "未知异常");
+            System.out.println(e);
+            return new YundaFaultResponse(10005, e.toString());
         }
     }
 }

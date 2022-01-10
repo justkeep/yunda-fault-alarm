@@ -28,6 +28,7 @@ public class MsgLogDTO implements Serializable {
 
     @Data
     public static class MsgDetail{
+        private Long id;
         /**
          * 线路名称
          */
@@ -57,6 +58,8 @@ public class MsgLogDTO implements Serializable {
          * 成功，失败
          */
         private String sendStatus;
+
+        private String reason;
     }
 
 }
